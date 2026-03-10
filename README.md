@@ -6,22 +6,29 @@ Flutter 기반 DAMO 서비스 모바일 앱 (Android / iOS)
 
 - **Framework**: Flutter 3.32.8
 - **Language**: Dart 3.8.1
+- **Architecture**: Clean Architecture
+- **State Management**: BLoC Pattern
 - **Firebase**: firebase_core (damo-app-2026)
 - **배포**: Firebase App Distribution
+- **IDE**: Android Studio
 
 ## 지원 플랫폼
 
 | 플랫폼 | 상태 | 패키지명 |
 |--------|------|---------|
-| Android | ✅ | `com.example.damo_flutter` |
-| iOS | ✅ (코드사이닝 필요) | `com.example.damoFlutter` |
+| Android | ✅ | `com.damo.app` |
+| iOS | ✅ (Apple Developer 등록 보류) | `com.damo.app` |
 
-## 프로젝트 구조
+## 프로젝트 구조 (예정)
 
 ```
 lib/
-├── main.dart                # 앱 엔트리포인트 + Firebase 초기화
-└── firebase_options.dart    # Firebase 설정 (자동 생성)
+├── core/              # 공통 (네트워크, 에러, 상수)
+├── data/              # Repository 구현체, DataSource, Model
+├── domain/            # Entity, Repository 인터페이스, UseCase
+├── presentation/      # Bloc, Pages, Widgets
+├── main.dart          # 앱 엔트리포인트 + Firebase 초기화
+└── firebase_options.dart  # Firebase 설정 (자동 생성)
 ```
 
 ## 로컬 실행
@@ -46,8 +53,8 @@ flutter build ios --release
 | 항목 | 값 |
 |------|-----|
 | 프로젝트 | damo-app-2026 |
-| Android App ID | `1:961127696213:android:875ad30cafb67b38f0d1dc` |
-| iOS App ID | `1:961127696213:ios:e2c1a3c89fc9ee66f0d1dc` |
+| Android App ID | `1:961127696213:android:7b2c493c2458ecc9f0d1dc` |
+| iOS App ID | `1:961127696213:ios:ef26c0ce57565d28f0d1dc` |
 | 콘솔 | https://console.firebase.google.com/project/damo-app-2026 |
 
 ## 배포
@@ -56,10 +63,12 @@ Firebase App Distribution으로 배포:
 ```bash
 firebase appdistribution:distribute build/app/outputs/flutter-apk/app-release.apk \
   --project damo-app-2026 \
-  --app 1:961127696213:android:875ad30cafb67b38f0d1dc
+  --app 1:961127696213:android:7b2c493c2458ecc9f0d1dc
 ```
 
-## Backend API
+## 관련 레포지토리
 
-- **Server**: http://54.180.179.231:8080
-- **Repository**: https://github.com/joheeyong/DAMO-server
+| 서비스 | 레포 |
+|--------|------|
+| 백엔드 (Spring Boot) | [DAMO-server](https://github.com/joheeyong/DAMO-server) |
+| 웹 (React) | [DAMO-web](https://github.com/joheeyong/DAMO-web) |
