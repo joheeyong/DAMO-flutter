@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "961127696213",
+    "project_id": "damo-app-2026",
+    "storage_bucket": "damo-app-2026.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:961127696213:android:875ad30cafb67b38f0d1dc",
+        "android_client_info": {
+          "package_name": "com.example.damo_flutter"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8brY5disD31u7W8Qf-HPZryibKMJMW_Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
