@@ -51,7 +51,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyD8brY5disD31u7W8Qf-HPZryibKMJMW_Q',
-    appId: '1:961127696213:android:875ad30cafb67b38f0d1dc',
+    appId: '1:961127696213:android:7b2c493c2458ecc9f0d1dc',
     messagingSenderId: '961127696213',
     projectId: 'damo-app-2026',
     storageBucket: 'damo-app-2026.firebasestorage.app',
@@ -59,10 +59,11 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyCkXlgXOWwPYyVWW9zxsNwrN1B9yvi6tAk',
-    appId: '1:961127696213:ios:e2c1a3c89fc9ee66f0d1dc',
+    appId: '1:961127696213:ios:ef26c0ce57565d28f0d1dc',
     messagingSenderId: '961127696213',
     projectId: 'damo-app-2026',
     storageBucket: 'damo-app-2026.firebasestorage.app',
-    iosBundleId: 'com.example.damoFlutter',
+    iosBundleId: 'com.damo.app',
   );
+
 }

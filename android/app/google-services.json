@@ -7,6 +7,25 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:961127696213:android:7b2c493c2458ecc9f0d1dc",
+        "android_client_info": {
+          "package_name": "com.damo.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8brY5disD31u7W8Qf-HPZryibKMJMW_Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:961127696213:android:875ad30cafb67b38f0d1dc",
         "android_client_info": {
           "package_name": "com.example.damo_flutter"

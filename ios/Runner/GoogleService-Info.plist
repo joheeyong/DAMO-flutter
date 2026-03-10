@@ -9,7 +9,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.example.damoFlutter</string>
+	<string>com.damo.app</string>
 	<key>PROJECT_ID</key>
 	<string>damo-app-2026</string>
 	<key>STORAGE_BUCKET</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:961127696213:ios:e2c1a3c89fc9ee66f0d1dc</string>
+	<string>1:961127696213:ios:ef26c0ce57565d28f0d1dc</string>
 </dict>
 </plist>

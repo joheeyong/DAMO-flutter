@@ -1,4 +1,4 @@
-package com.example.damo_flutter
+package com.damo.app
 
 import io.flutter.embedding.android.FlutterActivity
 
