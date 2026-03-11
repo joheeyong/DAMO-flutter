@@ -8,7 +8,7 @@ Flutter 기반 DAMO 서비스 모바일 앱 (Android / iOS)
 - **Language**: Dart 3.8.1
 - **Architecture**: Clean Architecture
 - **State Management**: BLoC Pattern
-- **Firebase**: firebase_core, firebase_messaging (damo-app-2026)
+- **Firebase**: firebase_core, firebase_messaging, firebase_analytics (damo-app-2026)
 - **배포**: Firebase App Distribution
 - **IDE**: Android Studio
 
@@ -44,6 +44,7 @@ lib/
 
 - **FCM 푸시 알림**: 서버에서 발송한 알림을 수신 (포그라운드/백그라운드)
 - **디바이스 토큰 자동 등록**: 앱 실행 시 FCM 토큰을 서버에 자동 등록
+- **Firebase Analytics**: 화면 전환 자동 추적 (FirebaseAnalyticsObserver)
 
 ## 로컬 실행
 

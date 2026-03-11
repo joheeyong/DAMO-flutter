@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'core/network/api_client.dart';
@@ -31,13 +32,23 @@ void main() async {
   final fcmRepository = FcmRepositoryImpl(fcmDataSource);
   final registerFcmTokenUseCase = RegisterFcmTokenUseCase(fcmRepository);
 
-  runApp(MyApp(registerFcmTokenUseCase: registerFcmTokenUseCase));
+  final analyticsInstance = FirebaseAnalytics.instance;
+
+  runApp(MyApp(
+    registerFcmTokenUseCase: registerFcmTokenUseCase,
+    analytics: analyticsInstance,
+  ));
 }
 
 class MyApp extends StatelessWidget {
   final RegisterFcmTokenUseCase registerFcmTokenUseCase;
+  final FirebaseAnalytics analytics;
 
-  const MyApp({super.key, required this.registerFcmTokenUseCase});
+  const MyApp({
+    super.key,
+    required this.registerFcmTokenUseCase,
+    required this.analytics,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +61,9 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         ),
+        navigatorObservers: [
+          FirebaseAnalyticsObserver(analytics: analytics),
+        ],
         home: const HomePage(),
       ),
     );
