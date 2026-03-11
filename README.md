@@ -19,16 +19,25 @@ Flutter 기반 DAMO 서비스 모바일 앱 (Android / iOS)
 | Android | ✅ | `com.damo.app` |
 | iOS | ✅ (Apple Developer 등록 보류) | `com.damo.app` |
 
-## 프로젝트 구조 (예정)
+## 프로젝트 구조
 
 ```
 lib/
-├── core/              # 공통 (네트워크, 에러, 상수)
-├── data/              # Repository 구현체, DataSource, Model
-├── domain/            # Entity, Repository 인터페이스, UseCase
-├── presentation/      # Bloc, Pages, Widgets
-├── main.dart          # 앱 엔트리포인트 + Firebase 초기화
-└── firebase_options.dart  # Firebase 설정 (자동 생성)
+├── core/
+│   ├── constants/          # API URL 등 앱 상수
+│   └── network/            # HTTP 클라이언트 (ApiClient)
+├── data/
+│   ├── datasource/         # Firebase + API 원격 데이터소스
+│   └── repository/         # Repository 구현체
+├── domain/
+│   ├── entity/             # 도메인 모델 (NotificationMessage)
+│   ├── repository/         # Repository 인터페이스
+│   └── usecase/            # 비즈니스 로직 (RegisterFcmTokenUseCase)
+├── presentation/
+│   ├── bloc/               # BLoC (FcmBloc, Event, State)
+│   └── page/               # 화면 (HomePage)
+├── main.dart               # DI + Firebase 초기화 + 앱 진입점
+└── firebase_options.dart   # Firebase 설정 (자동 생성)
 ```
 
 ## 주요 기능
