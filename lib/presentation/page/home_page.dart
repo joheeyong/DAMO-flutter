@@ -1,19 +1,55 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 import '../bloc/fcm_bloc.dart';
 import '../bloc/fcm_state.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  late final WebViewController _controller;
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onPageStarted: (_) {
+            if (mounted) setState(() => _isLoading = true);
+          },
+          onPageFinished: (_) {
+            if (mounted) setState(() => _isLoading = false);
+          },
+          onNavigationRequest: (request) {
+            // Allow all navigation within damo-web
+            if (request.url.contains('damo-web.vercel.app') ||
+                request.url.contains('accounts.google.com') ||
+                request.url.contains('nid.naver.com') ||
+                request.url.contains('naver.com/oauth') ||
+                request.url.contains('googleapis.com')) {
+              return NavigationDecision.navigate;
+            }
+            return NavigationDecision.navigate;
+          },
+        ),
+      )
+      ..setUserAgent('DAMO-App/1.0 Flutter')
+      ..loadRequest(Uri.parse('https://damo-web.vercel.app/search'));
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('DAMO'),
-      ),
-      body: BlocConsumer<FcmBloc, FcmState>(
+      body: BlocListener<FcmBloc, FcmState>(
+        listenWhen: (prev, curr) => prev.lastMessage != curr.lastMessage,
         listener: (context, state) {
           if (state.lastMessage != null) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -26,38 +62,19 @@ class HomePage extends StatelessWidget {
             );
           }
         },
-        listenWhen: (prev, curr) => prev.lastMessage != curr.lastMessage,
-        builder: (context, state) {
-          return Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'FCM Status',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  state.token.isEmpty
-                      ? 'FCM 토큰 대기중...'
-                      : 'FCM 토큰: ${state.token.substring(0, 20)}...',
-                ),
-                const SizedBox(height: 16),
-                if (state.lastMessage != null) ...[
-                  const Text(
-                    '마지막 알림',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        child: SafeArea(
+          child: Stack(
+            children: [
+              WebViewWidget(controller: _controller),
+              if (_isLoading)
+                const Center(
+                  child: CircularProgressIndicator(
+                    color: Color(0xFF6366F1),
                   ),
-                  const SizedBox(height: 8),
-                  Text(
-                    '${state.lastMessage!.title}: ${state.lastMessage!.body}',
-                  ),
-                ],
-              ],
-            ),
-          );
-        },
+                ),
+            ],
+          ),
+        ),
       ),
     );
   }
