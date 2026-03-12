@@ -13,10 +13,12 @@ class ApiClient {
   Future<Map<String, dynamic>> post(
     String path, {
     Map<String, dynamic>? body,
+    Map<String, String>? headers,
   }) async {
+    final mergedHeaders = {'Content-Type': 'application/json', ...?headers};
     final response = await _client.post(
       Uri.parse('$_baseUrl$path'),
-      headers: {'Content-Type': 'application/json'},
+      headers: mergedHeaders,
       body: body != null ? jsonEncode(body) : null,
     );
     return jsonDecode(response.body) as Map<String, dynamic>;
