@@ -14,6 +14,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late final WebViewController _controller;
   bool _isLoading = true;
+  DateTime? _lastBackPress;
 
   @override
   void initState() {
@@ -45,34 +46,63 @@ class _HomePageState extends State<HomePage> {
       ..loadRequest(Uri.parse('https://damo-web.vercel.app/search'));
   }
 
+  Future<bool> _onWillPop() async {
+    if (await _controller.canGoBack()) {
+      _controller.goBack();
+      return false;
+    }
+
+    final now = DateTime.now();
+    if (_lastBackPress != null &&
+        now.difference(_lastBackPress!) < const Duration(seconds: 2)) {
+      return true;
+    }
+
+    _lastBackPress = now;
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('한 번 더 누르면 앱이 종료됩니다'),
+          duration: Duration(seconds: 2),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    }
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: BlocListener<FcmBloc, FcmState>(
-        listenWhen: (prev, curr) => prev.lastMessage != curr.lastMessage,
-        listener: (context, state) {
-          if (state.lastMessage != null) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                  '${state.lastMessage!.title}: ${state.lastMessage!.body}',
-                ),
-                duration: const Duration(seconds: 3),
-              ),
-            );
-          }
-        },
-        child: SafeArea(
-          child: Stack(
-            children: [
-              WebViewWidget(controller: _controller),
-              if (_isLoading)
-                const Center(
-                  child: CircularProgressIndicator(
-                    color: Color(0xFF6366F1),
+    // ignore: deprecated_member_use
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        body: BlocListener<FcmBloc, FcmState>(
+          listenWhen: (prev, curr) => prev.lastMessage != curr.lastMessage,
+          listener: (context, state) {
+            if (state.lastMessage != null) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    '${state.lastMessage!.title}: ${state.lastMessage!.body}',
                   ),
+                  duration: const Duration(seconds: 3),
                 ),
-            ],
+              );
+            }
+          },
+          child: SafeArea(
+            child: Stack(
+              children: [
+                WebViewWidget(controller: _controller),
+                if (_isLoading)
+                  const Center(
+                    child: CircularProgressIndicator(
+                      color: Color(0xFF6366F1),
+                    ),
+                  ),
+              ],
+            ),
           ),
         ),
       ),
