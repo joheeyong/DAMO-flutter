@@ -1,16 +1,19 @@
 # DAMO Flutter
 
-Flutter 기반 DAMO 서비스 모바일 앱 (Android / iOS)
+**다모(DAMO)** - 통합 콘텐츠 검색 플랫폼 모바일 앱
 
 ## 기술 스택
 
-- **Framework**: Flutter 3.32.8
-- **Language**: Dart 3.8.1
-- **Architecture**: Clean Architecture
-- **State Management**: BLoC Pattern
-- **Firebase**: firebase_core, firebase_messaging, firebase_analytics (damo-app-2026)
-- **배포**: Firebase App Distribution
-- **IDE**: Android Studio
+| 분류 | 기술 |
+|------|------|
+| Framework | Flutter 3.32.8 |
+| Language | Dart 3.8.1 |
+| Architecture | Clean Architecture |
+| State | BLoC Pattern (flutter_bloc) |
+| WebView | webview_flutter 4.x |
+| Push | Firebase Cloud Messaging |
+| Analytics | Firebase Analytics |
+| Deploy | Firebase App Distribution |
 
 ## 지원 플랫폼
 
@@ -19,32 +22,67 @@ Flutter 기반 DAMO 서비스 모바일 앱 (Android / iOS)
 | Android | ✅ | `com.damo.app` |
 | iOS | ✅ (Apple Developer 등록 보류) | `com.damo.app` |
 
+## 앱 구조
+
+앱은 **WebView 기반 하이브리드 앱**으로, 웹 프론트엔드(`damo-web.vercel.app`)를 WebView로 로드하고 네이티브 기능(푸시 알림)을 결합합니다.
+
+```
+┌─────────────────────────────┐
+│         Flutter App          │
+│  ┌───────────────────────┐  │
+│  │    WebView             │  │
+│  │  damo-web.vercel.app   │  │
+│  │  (검색, 피드, 로그인,   │  │
+│  │   프로필, 관심사 등)    │  │
+│  └───────────────────────┘  │
+│  ┌───────────────────────┐  │
+│  │  Native Layer          │  │
+│  │  - FCM 푸시 알림       │  │
+│  │  - Firebase Analytics  │  │
+│  └───────────────────────┘  │
+└─────────────────────────────┘
+```
+
 ## 프로젝트 구조
 
 ```
 lib/
 ├── core/
-│   ├── constants/          # API URL 등 앱 상수
-│   └── network/            # HTTP 클라이언트 (ApiClient)
+│   ├── constants/app_constants.dart   # API URL 등 상수
+│   └── network/api_client.dart        # HTTP 클라이언트
 ├── data/
-│   ├── datasource/         # Firebase + API 원격 데이터소스
-│   └── repository/         # Repository 구현체
+│   ├── datasource/fcm_remote_datasource.dart
+│   └── repository/fcm_repository_impl.dart
 ├── domain/
-│   ├── entity/             # 도메인 모델 (NotificationMessage)
-│   ├── repository/         # Repository 인터페이스
-│   └── usecase/            # 비즈니스 로직 (RegisterFcmTokenUseCase)
+│   ├── entity/notification_message.dart
+│   ├── repository/fcm_repository.dart
+│   └── usecase/register_fcm_token_usecase.dart
 ├── presentation/
-│   ├── bloc/               # BLoC (FcmBloc, Event, State)
-│   └── page/               # 화면 (HomePage)
-├── main.dart               # DI + Firebase 초기화 + 앱 진입점
-└── firebase_options.dart   # Firebase 설정 (자동 생성)
+│   ├── bloc/
+│   │   ├── fcm_bloc.dart              # FCM 상태 관리
+│   │   ├── fcm_event.dart
+│   │   └── fcm_state.dart
+│   └── page/
+│       └── home_page.dart             # WebView + FCM 리스너
+├── main.dart                          # DI + Firebase 초기화
+└── firebase_options.dart              # Firebase 설정
 ```
 
 ## 주요 기능
 
-- **FCM 푸시 알림**: 서버에서 발송한 알림을 수신 (포그라운드/백그라운드)
-- **디바이스 토큰 자동 등록**: 앱 실행 시 FCM 토큰을 서버에 자동 등록
-- **Firebase Analytics**: 화면 전환 자동 추적 (FirebaseAnalyticsObserver)
+### WebView
+- `https://damo-web.vercel.app/search` 로딩
+- Google/Naver OAuth 도메인 네비게이션 허용
+- SafeArea 적용 (노치/상태바 대응)
+- 로딩 인디케이터
+
+### FCM 푸시 알림
+- 앱 실행 시 FCM 토큰 자동 등록 (서버 전송)
+- 포그라운드 알림: SnackBar 표시
+- 백그라운드 알림: 시스템 노티피케이션
+
+### Firebase Analytics
+- 자동 화면 추적 (FirebaseAnalyticsObserver)
 
 ## 로컬 실행
 
@@ -68,18 +106,9 @@ flutter build ios --release
 | 항목 | 값 |
 |------|-----|
 | 프로젝트 | damo-app-2026 |
-| Android App ID | `1:961127696213:android:7b2c493c2458ecc9f0d1dc` |
-| iOS App ID | `1:961127696213:ios:ef26c0ce57565d28f0d1dc` |
+| Android App ID | `1:961127696213:android:...` |
+| iOS App ID | `1:961127696213:ios:...` |
 | 콘솔 | https://console.firebase.google.com/project/damo-app-2026 |
-
-## 배포
-
-Firebase App Distribution으로 배포:
-```bash
-firebase appdistribution:distribute build/app/outputs/flutter-apk/app-release.apk \
-  --project damo-app-2026 \
-  --app 1:961127696213:android:7b2c493c2458ecc9f0d1dc
-```
 
 ## 관련 레포지토리
 
